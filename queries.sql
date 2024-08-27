@@ -40,15 +40,15 @@ order by average_income
 (продавцы, чья средняя выручка за сделку меньше средней выручки за сделку по всем продавцам)
 
 select concat(e.first_name,' ', e.last_name) as seller,
-to_char(s.sale_date, 'DAY') as day_of_week ,
+lower(to_char(s.sale_date, 'DAY')) as day_of_week ,
 round(sum(quantity * price),0) as income
 from sales s
 left join employees e
 on s.sales_person_id = e.employee_id
 left join products p 
 on p.product_id = s.product_id
-group by concat(e.first_name,' ', e.last_name), to_char(s.sale_date, 'DAY')
-order by to_char(s.sale_date, 'DAY'), seller
+group by concat(e.first_name,' ', e.last_name), to_char(s.sale_date, 'DAY'), to_char(s.sale_date,'id')
+order by to_char(s.sale_date,'id'), seller
 (Третий отчет содержит информацию о выручке по дням недели. Каждая запись содержит имя и фамилию продавца,
  день недели и суммарную выручку)
  
