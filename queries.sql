@@ -76,46 +76,19 @@ group by to_char(sale_date, 'YYYY-MM')
 order by selling_month ASC
 ( данные по количеству уникальных покупателей и выручке, которую они принесли)
 
-WITH FirstPurchases AS (
-    SELECT
-        concat(c.first_name,' ', c.last_name) as customer,
-        MIN(sale_date) AS first_purchase_date
-        from sales s
+select concat(c.first_name,' ', c.last_name) as customer,
+min(sale_date) as sale_date,
+concat(e.first_name,' ', e.last_name) as seller
+from sales s
 left join employees e
 on s.sales_person_id = e.employee_id
 left join products p 
 on p.product_id = s.product_id
 left join customers c 
 on c.customer_id = s.customer_id
-    GROUP BY
-        concat(c.first_name,' ', c.last_name)
-),
-FirstPurchaseDetails AS (
-    SELECT
-        concat(c.first_name,' ', c.last_name) as customer,
-        s.sale_date,
-        concat(e.first_name,' ', e.last_name) as seller
-       from sales s
-left join employees e
-on s.sales_person_id = e.employee_id
-left join products p 
-on p.product_id = s.product_id
-left join customers c 
-on c.customer_id = s.customer_id  
-    JOIN
-        FirstPurchases fp
-    ON
-        concat(c.first_name,' ', c.last_name) = fp.customer
-        AND s.sale_date = fp.first_purchase_date
-    WHERE
-        p.price = 0
-)
-SELECT
-    customer,
-    sale_date,
-    seller
-FROM
-    FirstPurchaseDetails
-ORDER BY
-    customer;
+where p.price = 0
+group by concat(c.first_name,' ', c.last_name), concat(e.first_name,' ', e.last_name)
+HAVING 
+    MIN(sale_date) IS NOT null
+order by customer
 (покупатели, первая покупка которых была в ходе проведения акций (акционные товары отпускали со стоимостью равной 0))
