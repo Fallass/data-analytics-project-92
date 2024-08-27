@@ -2,7 +2,6 @@ select count(customer_id) as customers_count
 from customers
 
 
-
 select e.first_name||' '||e.last_name as seller,
 count(s.sales_id) as operations,
 round(sum(quantity * price),0) as income
