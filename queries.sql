@@ -1,9 +1,9 @@
-select count(customer_id) as customers_count 
-from customers c 
+select count(customer_id) as customers_count
+from customers
 
 
 
-select concat(e.first_name,' ', e.last_name) as seller,
+select e.first_name||' '||e.last_name as seller,
 count(s.sales_id) as operations,
 round(sum(quantity * price),0) as income
 from sales s
@@ -11,7 +11,7 @@ left join employees e
 on s.sales_person_id = e.employee_id
 left join products p 
 on p.product_id = s.product_id 
-group by concat(e.first_name,' ', e.last_name)
+group by e.first_name||' '||e.last_name
 order by  income desc
 limit 10
 
@@ -87,4 +87,3 @@ group by concat(c.first_name,' ', c.last_name), concat(e.first_name,' ', e.last_
 HAVING 
     MIN(sale_date) IS NOT null
 order by customer
-
