@@ -2,19 +2,6 @@ select count(customer_id) as customers_count
 from customers
 
 
-select e.first_name||' '||e.last_name as seller,
-count(s.sales_id) as operations,
-round(sum(quantity * price),0) as income
-from sales s
-left join employees e
-on s.sales_person_id = e.employee_id
-left join products p 
-on p.product_id = s.product_id
-GROUP BY e.first_name||' '||e.last_name
-order by  income desc
-limit 10
-
-
 with tab as (
 select concat(e.first_name,' ', e.last_name) as seller, round(avg(quantity * price),0) as avg_income
 from sales s
